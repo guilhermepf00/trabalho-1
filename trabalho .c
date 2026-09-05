@@ -115,25 +115,25 @@ char *multiply( char *num1, char *num2 ) {
 	char *res = malloc ( 2 );
 	char teste1 = strlen ( num1 );
 	int teste2 = strlen ( num2 );
-    char resposta [ 400 ];
-    int mult1=0;
-    int mult2=0;
-	int i=0;
-    int j=0;
-    int aju[400] = {0};
+    char resposta [ 200 ];
+    int mult1 = 0;
+    int mult2 = 0;
+	int i = 0;
+    int j = 0;
+    int aju [ 200 ] = { 0 };
     int total = 0;
   
     i = teste1 - 1;
-	while (i >= 0){
+	while ( i >= 0 ){
     j = teste2 - 1;
  
-    while (j >= 0){
-     mult1 = num1[i] - 48;
-     mult2  = num2[j] - 48;
+    while ( j >= 0 ){
+     mult1 = num1 [ i ] - 48;
+     mult2  = num2 [ j ] - 48;
      total = mult1 * mult2 + aju[i + j + 1];
      
-     aju[i + j + 1 ] = total % 10;
-     aju [i + j] += total / 10;
+     aju [ i + j + 1 ] = total % 10;
+     aju [ i + j ] += total / 10;
      
      j--;
      }
@@ -141,26 +141,24 @@ char *multiply( char *num1, char *num2 ) {
     
      }
      teste1 += teste2;
-     i=0;
-     int k=0;
-     int zero=0;
+     int k = 0;
+     int zero = 0;
      while( zero < teste1 && aju[zero] == 0){
         zero ++;
      }
 
-     if (zero == teste1){
+     if ( zero == teste1 ){
 
-        resposta[k] =  '0';
+        resposta [ k ] =  '0';
         k++;
      }else{
      while( zero < teste1 ){
-        resposta[k] = aju[zero] + 48;
+        resposta [ k ] = aju [ zero ] + 48;
         k++;
-    
-        zero++; 
+		zero++; 
      }}
 
-     resposta[k] = '\0';
+     resposta [ k ] = '\0';
     
 	strcpy( res, resposta );
 	
