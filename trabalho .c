@@ -113,7 +113,7 @@ multiply
 char *multiply( char *num1, char *num2 ) {
 	
 	char *res = malloc ( 2 );
-	char teste1 = strlen ( num1 );
+	int teste1 = strlen ( num1 );
 	int teste2 = strlen ( num2 );
     char resposta [ 200 ];
     int mult1 = 0;
