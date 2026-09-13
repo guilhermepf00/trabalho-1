@@ -1,185 +1,176 @@
 /*
 ===============================================================================
 
-	LeetCode 43 - Multiplicar Strings ( Multiply Strings )
+	LeetCode 53 - Maior Soma de Subarray ( Maximum Subarray )
 
 	-------------------------------------------------------------------
 	ENUNCIADO ORIGINAL
 	-------------------------------------------------------------------
 
-	Dados dois numeros nao-negativos num1 e num2 representados como
-	string, retorne o produto de num1 e num2, tambem representado
-	como string.
+	Dado um array de inteiros nums, encontre a subarray com a maior
+	soma e retorne essa soma.
 
-	Observacao: voce nao deve usar nenhuma biblioteca de BigInteger
-	nem converter as entradas diretamente para inteiro.
+	Uma subarray é uma sequência de elementos contíguos e não vazia
+	dentro de um array.
 
 	Exemplo 1:
 
-		Entrada: num1 = "2", num2 = "3"
-		Saida: "6"
+		Entrada: nums = [-2,1,-3,4,-1,2,1,-5,4]
+		Saída: 6
+		Explicação: a subarray [4,-1,2,1] tem a maior soma, que é 6.
 
 	Exemplo 2:
 
-		Entrada: num1 = "123", num2 = "456"
-		Saida: "56088"
+		Entrada: nums = [1]
+		Saída: 1
+		Explicação: a subarray [1] tem a maior soma, que é 1.
 
-	Restricoes:
+	Exemplo 3:
 
-		1 <= num1.length, num2.length <= 200
-		num1 e num2 consistem apenas de digitos
-		num1 e num2 nao tem zeros a esquerda, exceto o proprio "0"
+		Entrada: nums = [5,4,-1,7,8]
+		Saída: 23
+		Explicação: a subarray [5,4,-1,7,8] tem a maior soma, que é 23.
+
+	Restrições:
+
+		1 <= nums.length <= 10^5
+		-10^4 <= nums[i] <= 10^4
+
 
 	-------------------------------------------------------------------
-	A PARTIR DAQUI NAO FAZ PARTE DO ENUNCIADO ORIGINAL
-#include <stdio.h>
-int main ( ){
-printf ("ola mundo");
-}
-	O texto abaixo e material de apoio com exemplos que podem nao
+	A PARTIR DAQUI NÃO FAZ PARTE DO ENUNCIADO ORIGINAL
+
+	O texto abaixo é material de apoio com exemplos que podem não
 	cobrir tudo que o enunciado acima dita.
 	-------------------------------------------------------------------
 
-	POR ONDE COMECAR
+	ESTE PROBLEMA NÃO TEM EDITORIAL, ENTÃO EM CASA USE O SEGUINTE COMO EDITORIAL: https://leetcode.com/problems/maximum-subarray/solutions/7592706/maximum-subarray-kadanes-algorithm-with-tcw2m/
 
-	Escreva sua solucao dentro da funcao multiply, mais abaixo neste
-	arquivo. E a funcao exigida pelo LeetCode.
+	POR ONDE COMEÇAR
 
-	O CABECALHO DA FUNCAO multiply NAO PODE SER ALTERADO: nome,
-	tipo de retorno e parametros devem permanecer exatamente como
-	estao. O RESTO DO ARQUIVO PODE SER MODIFICADO a vontade: crie
-	funcoes auxiliares, structs, variaveis globais ou o que mais
+	Escreva sua solução dentro da função maxSubArray, mais abaixo
+	neste arquivo. É a função exigida pelo LeetCode.
+
+	O CABEÇALHO DA FUNÇÃO maxSubArray NÃO PODE SER ALTERADO: nome,
+	tipo de retorno e parâmetros devem permanecer exatamente como
+	estão. O RESTO DO ARQUIVO PODE SER MODIFICADO a vontade: crie
+	funções auxiliares, structs, variáveis globais ou o que mais
 	precisar.
 
 	AVISO SOBRE OS TESTES
 
-	Os 10 testes deste arquivo NAO SAO EXAUSTIVOS. Passar em todos
-	eles nao significa que a solucao esta correta. Para ser
-	considerada correta, a solucao precisa ser submetida ao LeetCode
+	Os 10 testes deste arquivo NÃO SÃO EXAUSTIVOS. Passar em todos
+	eles não significa que a solução está correta. Para ser
+	considerada correta, a solução precisa ser submetida ao LeetCode
 	e passar em TODOS os testes da plataforma.
 
-	Voce pode ( e deve ) adicionar mais casos de teste no main para
-	cobrir situacoes que os 10 daqui nao cobrem.
+	Você pode ( e deve ) adicionar mais casos de teste no main para
+	cobrir situações que os 10 daqui não cobrem.
 
-	EXEMPLOS DO QUE A OBSERVACAO DO ENUNCIADO PROIBE
+	OBSERVAÇÕES SOBRE O ENUNCIADO
 
-	Com ate 200 digitos o valor nao cabe em nenhum tipo nativo do C
-	( long long guarda no maximo 19 digitos ).
+	A subarray precisa ser CONTÍGUA: os elementos escolhidos são
+	vizinhos no array, não podem ser salteados.
 
-	PROIBIDO - converter a entrada para um tipo nativo:
+	A subarray precisa ser NÃO VAZIA. Quando todos os valores são
+	negativos, a resposta é o MAIOR elemento ( o menos negativo ),
+	nunca 0. O teste 5 cobre esse caso.
 
-		long long a = atoll( num1 );
-		long long b = atoll( num2 );
-		sprintf( res, "%lld", a * b );
+	O que se retorna é a SOMA, não a subarray nem seus índices.
 
-	PROIBIDO - a mesma coisa com strtoll, sscanf ou laco manual:
-
-		long long a = strtoll( num1, NULL, 10 );
-		sscanf( num1, "%lld", &a );
-		for ( i = 0; num1[i]; i++ ) { a = a * 10 + ( num1[i] - '0' ); }
-
-	PROIBIDO - usar ponto flutuante como atalho:
-
-		double a = atof( num1 );        // perde precisao alem de 2^53
-
-	PROIBIDO - usar biblioteca de precisao arbitraria:
-
-		#include <gmp.h>                // GMP, BigInt e similares
-
-	Por que falha: "98765432109876543210" tem 20 digitos e ja estoura
-	long long antes mesmo da multiplicacao. O teste 10 deste arquivo
-	usa exatamente esse caso; qualquer atalho acima quebra nele.
+	Pelas restrições, a maior soma possível em módulo é
+	10^5 * 10^4 = 10^9, que cabe em int ( o limite é 2147483647 ).
 
 ===============================================================================
 */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 /*
 ====================
-multiply
+maxSubArray
 
-	>>> ESCREVA SUA SOLUCAO AQUI DENTRO <<<
-
-	Assinatura exigida pelo LeetCode: NAO ALTERE o cabecalho abaixo
-	( nome, tipo de retorno e parametros ). Funcoes auxiliares podem
+	Assinatura exigida pelo LeetCode: NÃO ALTERE o cabeçalho abaixo
+	( nome, tipo de retorno e parâmetros ). Funções auxiliares podem
 	ser criadas livremente fora dela.
-
-	Devolve uma string alocada com malloc contendo o produto.
 ====================
 */
-char *multiply( char *num1, char *num2 ) {
+int maxSubArray( int *nums, int numsSize ) {
+	int total = 0;
+	int teste = 0;
+	int teste1 = 0;
+	int resposta = 0;
+	int i = 0;
 	
-	char *res = malloc ( 2 );
-	char teste1 = strlen ( num1 );
-	int teste2 = strlen ( num2 );
-    char mult1[100];
-    char mult2[100];
-	char resposta [ 100 ];
-	int total = 0; 
-	int i=0;
-    int j=0;
-  
+	if ( numsSize == 1 ){
+			return *nums;
+		}
 	
-	while (i <= teste1){
-    
-    while (j <= teste2){
-    
-     mult1[i]  = num1[i];
-     mult2[j]  = num2[j];
-     
-     
-     total += teste1 * teste2;
-     teste1 = 0;
-     teste2 = 0;
-     
-     i++;
-     j++;
-    }
-    }
-    for ( int i = total; i < '\0'; i++ ){
-		resposta[i] = total;
-		
-	} 
+	while ( i < numsSize ){	
 
+	 total  += nums [ i ];
+	 teste1 += nums [ i ];
+	 
+	 if ( teste < total ){
+		teste -= teste;
+		teste += total;
+	}
 	
-	strcpy( res, resposta );
-	
-	return res;
+	 if ( resposta <= teste ){
+		 
+		 resposta -= resposta;
+		 resposta += teste;
+		 
+		}
+		 if ( resposta > teste ){
+		 
+		 resposta -= resposta;
+		 resposta += teste;
+		 
+		}
+
+
+	i++;
+	}
+		
+	return resposta ;
+}
+
+/*
+====================
+ImprimirArray
+====================
+*/
+static void ImprimirArray( const int *a, int n ) {
+	int		i;
+
+	printf( "[" );
+	for ( i = 0; i < n; i++ ) {
+		printf( "%d%s", a[i], i + 1 < n ? "," : "" );
+	}
+	printf( "]" );
 }
 
 /*
 ====================
 RodarTeste
 
-	Compara o retorno de multiply com o resultado esperado hard-coded.
+	Compara o retorno de maxSubArray com o resultado esperado
+	hard-coded.
 ====================
 */
-static int RodarTeste( int num, const char *n1, const char *n2,
-					   const char *esperado ) {
-	char *	c1;
-	char *	c2;
-	char *	res;
+static int RodarTeste( int num, int *nums, int n, int esperado ) {
+	int		obtido;
 	int		ok;
 
-	/* copias defensivas: a funcao recebe char* nao-const */
-	c1 = malloc( strlen( n1 ) + 1 );
-	c2 = malloc( strlen( n2 ) + 1 );
-	strcpy( c1, n1 );
-	strcpy( c2, n2 );
+	obtido = maxSubArray( nums, n );
+	ok = ( obtido == esperado );
 
-	res = multiply( c1, c2 );
-	ok = ( strcmp( res, esperado ) == 0 );
-
-	printf( "Teste %2d: \"%s\" * \"%s\"\n", num, n1, n2 );
-	printf( "  esperado = \"%s\"\n  obtido   = \"%s\"  ->  %s\n\n",
-			esperado, res, ok ? "OK" : "FALHOU" );
-
-	free( res );
-	free( c1 );
-	free( c2 );
+	printf( "Teste %2d: nums = ", num );
+	ImprimirArray( nums, n );
+	printf( "\n  esperado = %d | obtido = %d  ->  %s\n\n",
+			esperado, obtido, ok ? "OK" : "FALHOU" );
 	return ok;
 }
 
@@ -191,45 +182,51 @@ main
 int main( void ) {
 	int		passou;
 
+	/* Teste 1: exemplo 1 do enunciado - melhor subarray [4,-1,2,1] */
+	int		t1[] = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
+
+	/* Teste 2: exemplo 2 do enunciado - um único elemento */
+	int		t2[] = { 1 };
+
+	/* Teste 3: exemplo 3 do enunciado - o array inteiro */
+	int		t3[] = { 5, 4, -1, 7, 8 };
+
+	/* Teste 4: um único elemento negativo */
+	int		t4[] = { -1 };
+
+	/* Teste 5: TODOS negativos - resposta é o maior elemento, não 0 */
+	int		t5[] = { -2, -3, -1, -5 };
+
+	/* Teste 6: todos positivos - o array inteiro */
+	int		t6[] = { 1, 2, 3, 4, 5 };
+
+	/* Teste 7: melhor subarray é só o último elemento */
+	int		t7[] = { -1, -2, -3, 4 };
+
+	/* Teste 8: negativo no meio compensa ser atravessado */
+	int		t8[] = { 2, -1, 2, 3, -9 };
+
+	/* Teste 9: dois elementos, ambos negativos */
+	int		t9[] = { -2, -1 };
+
+	/* Teste 10: valores no limite das restrições ( +-10^4 ) */
+	int		t10[] = { 10000, -10000, 10000 };
+
 	passou = 0;
+	passou += RodarTeste(  1, t1,  9, 6 );
+	passou += RodarTeste(  2, t2,  1, 1 );
+	passou += RodarTeste(  3, t3,  5, 23 );
+	passou += RodarTeste(  4, t4,  1, -1 );
+	passou += RodarTeste(  5, t5,  4, -1 );
+	passou += RodarTeste(  6, t6,  5, 15 );
+	passou += RodarTeste(  7, t7,  4, 4 );
+	passou += RodarTeste(  8, t8,  5, 6 );
+	passou += RodarTeste(  9, t9,  2, -1 );
+	passou += RodarTeste( 10, t10, 3, 10000 );
 
-	/* Teste 1: exemplo 1 do enunciado */
-	passou += RodarTeste(  1, "2", "3", "6" );
-
-	/* Teste 2: exemplo 2 do enunciado */
-	passou += RodarTeste(  2, "123", "456", "56088" );
-
-	/* Teste 3: zero a esquerda - resposta e "0", nao "000" */
-	passou += RodarTeste(  3, "0", "52", "0" );
-
-	/* Teste 4: zero vezes zero */
-	passou += RodarTeste(  4, "0", "0", "0" );
-
-	/* Teste 5: um digito com carry */
-	passou += RodarTeste(  5, "9", "9", "81" );
-
-	/* Teste 6: carry propagando por todas as posicoes */
-	passou += RodarTeste(  6, "99", "99", "9801" );
-
-	/* Teste 7: produto de 18 digitos - ainda caberia em long long, */
-	/* entao NAO detecta atalho sozinho                              */
-	passou += RodarTeste(  7, "123456789", "987654321",
-						   "121932631112635269" );
-
-	/* Teste 8: multiplicacao por 1 com operando longo */
-	passou += RodarTeste(  8, "1", "999999999999", "999999999999" );
-
-	/* Teste 9: zeros internos e finais */
-	passou += RodarTeste(  9, "100", "100", "10000" );
-
-	/* Teste 10: 20 x 20 digitos - as ENTRADAS ja estouram long long; */
-	/* qualquer conversao para tipo nativo falha aqui                  */
-	passou += RodarTeste( 10, "98765432109876543210", "12345678901234567890",
-						   "1219326311370217952237463801111263526900" );
-
-	/* Adicione aqui seus proprios casos de teste, no mesmo formato:
-	   passou += RodarTeste( 11, "num1", "num2", "resultado esperado" );
-	   Lembre de ajustar o total impresso e a condicao do return. */
+	/* Adicione aqui seus próprios casos de teste, no mesmo formato:
+	   passou += RodarTeste( 11, arrayNums, tamanho, resultadoEsperado );
+	   Lembre de ajustar o total impresso e a condição do return. */
 
 	printf( "Resultado final: %d/10 testes passaram\n", passou );
 	printf( "Lembrete: estes 10 testes NAO sao exaustivos. Submeta ao\n" );
