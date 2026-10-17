@@ -161,7 +161,14 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 
 
 	return (struct ListNode* ) inicio -> prox ;
-	 
+
+		lista *atu = cab -> prox;
+    lista *nv;
+    while ( atu != NULL ){
+        nv = atu -> prox;
+        free ( atu );
+        atu = nv;
+    }
 }
 
 
